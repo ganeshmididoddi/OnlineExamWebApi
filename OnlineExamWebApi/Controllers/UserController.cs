@@ -33,12 +33,22 @@ namespace OnlineExamWebApi.Controllers
         [Route("UserLogin")]
         public IActionResult PostUser(Login user)
         {
-            var data = db.Users.Where(d => d.Email == user.Username && d.Password == user.Password);
-            if (data.Count() == 0)
-            {
-                return NotFound($"Invalid Credintials");
+            if (user.Role == "user") {
+                var data = db.Users.Where(d => d.Email == user.Username && d.Password == user.Password);
+                if (data.Count() == 0)
+                {
+                    return NotFound($"Invalid Credintials");
+                }
+                return Ok(data);
             }
-            return Ok(data);
+            else {
+                var data = db.Admins.Where(d => d.Username == user.Username && d.Password == user.Password);
+                if (data.Count() == 0)
+                {
+                    return NotFound($"Invalid Credintials");
+                }
+                return Ok(data);
+            }
         }
 
 
@@ -61,7 +71,7 @@ namespace OnlineExamWebApi.Controllers
                 }
                 catch (Exception)
                 {
-                    return BadRequest("Something went wrong while saving record");
+                    return BadRequest("Email-Id Alredy Exist");
                 }
             }
             return Created("Record Successfull Added", user);
@@ -88,9 +98,9 @@ namespace OnlineExamWebApi.Controllers
 
         // Forget Password
 
-        [HttpGet()]
-        [Route("ForgetPassword")]
-        public IActionResult GetUser([FromQuery] string email)
+        [HttpPut()]
+        [Route("ResetPassword/{email}")]
+        public IActionResult PutUser(string email)
         {
             if (email == null)
             {
@@ -101,7 +111,24 @@ namespace OnlineExamWebApi.Controllers
             {
                 return NotFound($"User email Incorrect");
             }
-            return Ok($"Email sent to {email} Successfully");
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var stringChars = new char[8];
+            var random = new Random();
+
+            for (int i = 0; i < stringChars.Length; i++)
+            {
+                stringChars[i] = chars[random.Next(chars.Length)];
+            }
+
+            var finalString = new String(stringChars);
+            ////User ouser = (User)db.Users.Where(User=>User.Email==email);
+            //var data1 = (from user in db.Users where user.Email == email select new { Id = user.UserId, } );
+            //Console.WriteLine(data1);
+            //User ouser = db.Users.Find(data1);
+            //ouser.Password = finalString;
+            //db.SaveChanges();
+            return Ok($"Hey{email} Your New Password is {finalString}");
+
         }
 
         // PUT api/<UserController>/5
