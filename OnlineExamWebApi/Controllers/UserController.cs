@@ -29,15 +29,11 @@ namespace OnlineExamWebApi.Controllers
 
         //Login for User
 
-        [HttpGet()]
+        [HttpPost()]
         [Route("UserLogin")]
-        public IActionResult GetUser([FromQuery] string email, [FromQuery] string password)
+        public IActionResult PostUser(Login user)
         {
-            if (email == null || password == null)
-            {
-                return BadRequest("Email or Password cannot be null");
-            }
-            var data = db.Users.Where(d => d.Email == email && d.Password == password);
+            var data = db.Users.Where(d => d.Email == user.Username && d.Password == user.Password);
             if (data.Count() == 0)
             {
                 return NotFound($"Invalid Credintials");
