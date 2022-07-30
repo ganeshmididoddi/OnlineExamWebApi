@@ -53,5 +53,22 @@ namespace OnlineExamWebApi.Controllers
             }
             return Ok(data);
         }
+
+        /// ADMIN ANAYZE
+        /// 
+
+        [HttpGet]
+        [Route("GetAnalysis")]
+        public IActionResult GetAnalysis([FromQuery]int test_id, [FromQuery] int level, [FromQuery] int? marks, [FromQuery] string? qualification, [FromQuery] string?city)
+        {
+           
+           var data = (from attempt in db.Attempts where attempt.TestId == test_id && attempt.LevelCleared==level select attempt);
+
+            if (data == null)
+            {
+                return NotFound($"No Any record Found");
+            }
+            return Ok(data);
+        }
     }
 }

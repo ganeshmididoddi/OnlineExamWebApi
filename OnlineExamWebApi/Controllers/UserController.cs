@@ -110,7 +110,7 @@ namespace OnlineExamWebApi.Controllers
             
             if (data == null)
             {
-                return NotFound($"User email Incorrect");
+                return NotFound($"User Does not exist");
             }
             var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             var stringChars = new char[8];
