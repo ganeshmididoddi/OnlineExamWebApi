@@ -98,7 +98,7 @@ namespace OnlineExamWebApi.Controllers
 
         // Forget Password
 
-        [HttpPut()]
+        [HttpGet()]
         [Route("ResetPassword/{email}")]
         public IActionResult PutUser(string email)
         {
@@ -106,8 +106,9 @@ namespace OnlineExamWebApi.Controllers
             {
                 return BadRequest("Email cannot be null");
             }
-            var data = db.Users.Where(d => d.Email == email);
-            if (data.Count() == 0)
+            var data = db.Users.Where(d => d.Email == email).FirstOrDefault();
+            
+            if (data == null)
             {
                 return NotFound($"User email Incorrect");
             }
@@ -121,21 +122,18 @@ namespace OnlineExamWebApi.Controllers
             }
 
             var finalString = new String(stringChars);
+           
             ////User ouser = (User)db.Users.Where(User=>User.Email==email);
             //var data1 = (from user in db.Users where user.Email == email select new { Id = user.UserId, } );
             //Console.WriteLine(data1);
-            //User ouser = db.Users.Find(data1);
-            //ouser.Password = finalString;
-            //db.SaveChanges();
+            User ouser = db.Users.Find(data.UserId);
+            ouser.Password = finalString;
+            db.SaveChanges();
             return Ok($"Hey{email} Your New Password is {finalString}");
 
         }
 
         // PUT api/<UserController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
 
     }
 }
