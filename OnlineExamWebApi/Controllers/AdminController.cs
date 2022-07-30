@@ -27,24 +27,6 @@ namespace OnlineExamWebApi.Controllers
         }
 
 
-        //Login for Admin 
-
-        // GET: api/<AdminController>
-        [HttpGet()]
-        [Route("AdminLogin")]
-        public IActionResult GetAdmin([FromQuery] string email, [FromQuery] string password)
-        {
-            if (email == null || password == null)
-            {
-                return BadRequest("Email or Password cannot be null");
-            }
-            var data = db.Admins.Where(d => d.Username == email && d.Password == password);
-            if (data.Count() == 0)
-            {
-                return NotFound($"Invalid Credintials");
-            }
-            return Ok(data);
-        }
 
     }
 }

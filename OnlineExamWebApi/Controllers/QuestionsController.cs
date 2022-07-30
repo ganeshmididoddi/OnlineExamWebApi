@@ -34,6 +34,9 @@ namespace OnlineExamWebApi.Controllers
             return Created("Question Added Successfully", que);
         }
 
+
+        // Get QUESTIONS
+
         [HttpGet()]
         [Route("GetQuestion")]
         public IActionResult GetQuestion([FromQuery] int test_id, [FromQuery] int level_id)
@@ -41,7 +44,7 @@ namespace OnlineExamWebApi.Controllers
             var data = db.Questions.Where(d => d.TestId ==test_id && d.LevelId == level_id);
             if (data.Count() == 0)
             {
-                return NotFound($"Cant Fetch Questions check levelid and testid are proper");
+                return NotFound($"Cant Fetch Questions Select Proper levelid and testid");
             }
             return Ok(data);
         }

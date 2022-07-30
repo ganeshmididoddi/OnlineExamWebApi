@@ -23,7 +23,7 @@ namespace OnlineExamWebApi.Controllers
         [Route("GetUsers")]
         public IActionResult GetUser()
         {
-            var data = from user in db.Users select new { Id = user.UserId, Name = user.Name, Email=user.Email, Mobile=user.Phone, College= user.College, YOP=user.YearOfPassing, City = user.City, };
+            var data = from user in db.Users select user;
             return Ok(data);
         }
 
@@ -86,7 +86,7 @@ namespace OnlineExamWebApi.Controllers
             {
                 return BadRequest("Id cannot be null");
             }
-            var data = (from user in db.Users where user.UserId == id select new { Id = user.UserId, Name = user.Name, Email = user.Email, Mobile = user.Phone, College = user.College, YOP = user.YearOfPassing, City = user.City });
+            var data = (from user in db.Users where user.UserId == id select user);
             
             if (data.Count() == 0)
             {
@@ -129,11 +129,9 @@ namespace OnlineExamWebApi.Controllers
             User ouser = db.Users.Find(data.UserId);
             ouser.Password = finalString;
             db.SaveChanges();
-            return Ok($"Hey{email} Your New Password is {finalString}");
+            return Ok($"Hey {email} your New Password is {finalString}");
 
         }
-
-        // PUT api/<UserController>/5
 
     }
 }

@@ -14,9 +14,7 @@ namespace OnlineExamWebApi.Controllers
     public class TestController : ControllerBase
     {
         onlineexamContext db = new onlineexamContext();
-        
-        
-        
+                       
         // GET: api/<TestController>
 
         // Create New Test 
@@ -42,7 +40,6 @@ namespace OnlineExamWebApi.Controllers
 
 
         // Get Test By ID
-        // 
 
 
         [HttpGet]
@@ -53,8 +50,7 @@ namespace OnlineExamWebApi.Controllers
             {
                 return BadRequest("Test-Id cannot be null");
             }
-            var data = (from test in db.Tests where test.TestId == id select new { Id = test.TestId, Subject_Name = test.SubjectName, Date=test.TestDate,Duration=test.Duration,L1marks=test.LOneReq,l2marks=test.LTwoReq,l3marks=test.LThreeReq,
-            adminid=test.AdminId});
+            var data = (from test in db.Tests where test.TestId == id select test);
 
             if (data.Count() == 0)
             {
@@ -64,31 +60,38 @@ namespace OnlineExamWebApi.Controllers
         }
 
 
+        // Get Test ID AND SUBJECT NAME
 
-
-        // GET api/<TestController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet]
+        [Route("GetTestList")]
+        public IActionResult GetTestList()
         {
-            return "value";
+
+            var data =(from test in db.Tests select new  {Id=test.TestId, Subject=test.SubjectName });
+            return Ok(data.ToList());
         }
 
-        // POST api/<TestController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        //Delete Test by Id
+
+        [HttpDelete]
+        [Route("DeleteTest/{id}")]
+        public IActionResult DeleteTest(int id)
         {
+            var data = db.Tests.Find(id);
+            db.Tests.Remove(data);
+            db.SaveChanges();
+            return Ok($"{data.SubjectName} Test Deleted");
         }
 
-        // PUT api/<TestController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
 
-        // DELETE api/<TestController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // GET ALL TEST
+
+        [HttpGet]
+        [Route("GetTest")]
+        public IActionResult GetTest()
         {
+            var data = from test in db.Tests select test;
+            return Ok(data);
         }
     }
 }
