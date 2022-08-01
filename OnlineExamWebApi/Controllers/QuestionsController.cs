@@ -45,7 +45,7 @@ namespace OnlineExamWebApi.Controllers
             //var data = db.Questions.Where(d => d.TestId == test_id && d.LevelId == level_id)
 
             var data = from q in db.Questions join a in db.Attempts on q.TestId equals a.TestId where q.TestId == test_id && q.LevelId == level_id && a.UserId==user_id
-                       select new { question = q.Question1, option1=q.OptionsOne, option2 = q.OptionsTwo, option3 = q.OptionsThree, option4 = q.OptionsFour, ans=q.OptionsCorrect, attempt_id = a.AttemptId };
+                       select new { id=q.QuestionId,question = q.Question1, option1=q.OptionsOne, option2 = q.OptionsTwo, option3 = q.OptionsThree, option4 = q.OptionsFour, ans=q.OptionsCorrect, attempt_id = a.AttemptId };
             
             if (data.Count() == 0)
             {
