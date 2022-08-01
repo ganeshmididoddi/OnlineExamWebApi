@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OnlineExamWebApi.Models;
 using System;
 using System.Collections.Generic;
@@ -70,6 +71,16 @@ namespace OnlineExamWebApi.Controllers
             var data =(from test in db.Tests select new  {Id=test.TestId, Subject=test.SubjectName });
             return Ok(data.ToList());
         }
+
+        // GET NOT GIVEN TEST
+        [HttpGet]
+        [Route("GetToAttempt")]
+        public IActionResult GetNotAttempted([FromQuery]int user_id)
+        {
+            var data = db.Tests.FromSqlInterpolated<Test>($"gettoattempt @user_id={user_id}");
+            return Ok(data);
+        }
+
 
         //Delete Test by Id
 
