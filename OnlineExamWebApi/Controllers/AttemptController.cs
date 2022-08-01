@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OnlineExamWebApi.Models;
 using System;
 using System.Collections.Generic;
@@ -54,21 +55,35 @@ namespace OnlineExamWebApi.Controllers
             return Ok(data);
         }
 
-        /// ADMIN ANAYZE
+        /// Edit Attempt\       /// 
         /// 
-
-        [HttpGet]
-        [Route("GetAnalysis")]
-        public IActionResult GetAnalysis([FromQuery]int test_id, [FromQuery] int level, [FromQuery] int? marks, [FromQuery] string? qualification, [FromQuery] string?city)
+        [HttpPut]
+        [Route("EditAttempt")]
+        public IActionResult PutAttempt([FromQuery] int attempt_id, [FromQuery] int level, [FromQuery] int marks)
         {
-           
-           var data = (from attempt in db.Attempts where attempt.TestId == test_id && attempt.LevelCleared==level select attempt);
-
-            if (data == null)
+            if (ModelState.IsValid)
             {
-                return NotFound($"No Any record Found");
+                Attempt oldAttempt = db.Attempts.Find(attempt_id);
+                if(level ==1)
+                {
+                    oldAttempt.LevelCleared = 1;
+                    oldAttempt.LOneMarks = marks;
+                }
+                if (level == 2)
+                {
+                    oldAttempt.LevelCleared = 2;
+                    oldAttempt.LTwoMarks = marks;
+                }
+                if (level == 3)
+                {
+                    oldAttempt.LevelCleared = 3;
+                    oldAttempt.LThreeMarks = marks;
+                }
+                db.SaveChanges();
+                return Ok();
             }
-            return Ok(data);
+            return BadRequest("Unable to edit the record");
         }
     }
+
 }

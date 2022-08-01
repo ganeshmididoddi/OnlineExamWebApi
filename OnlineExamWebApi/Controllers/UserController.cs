@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OnlineExamWebApi.Models;
 using System;
 using System.Collections.Generic;
@@ -131,6 +132,40 @@ namespace OnlineExamWebApi.Controllers
             db.SaveChanges();
             return Ok($"Hey {email} your New Password is {finalString}");
 
+        }
+
+        // User analysis
+
+        [HttpGet]
+        [Route("GetAnalysis")]
+        public IActionResult GetAnalysis([FromQuery] int user_id)
+        {
+            List<Attempt> attemptlist = db.Attempts.Include("Test").Where(c => c.UserId == user_id).ToList();
+
+            List<User_Analysis> analysislist = new List<User_Analysis>();
+            foreach (var attempt in attemptlist)
+            {
+                User_Analysis analysis = new User_Analysis();
+
+                analysis.AttemptId = attempt.AttemptId;
+                analysis.UserID = attempt.UserId;
+                analysis.TestId = attempt.TestId;
+                analysis.SubjectName = attempt.Test.SubjectName;
+                analysis.LevelCleared = attempt.LevelCleared;
+                analysis.LOneMarks = attempt.LOneMarks;
+                analysis.LTwoMarks = attempt.LTwoMarks;
+                analysis.LThreeMarks = attempt.LThreeMarks;
+                if (analysis.LevelCleared == 1) analysis.Marks = analysis.LOneMarks;
+                if (analysis.LevelCleared == 1) analysis.Marks = analysis.LTwoMarks;
+                else analysis.Marks = analysis.LTwoMarks;
+
+                analysislist.Add(analysis);
+            }
+            if (analysislist.Count == 0)
+            {
+                return NotFound(" No Record found");
+            }
+            return Ok(analysislist);
         }
 
     }
