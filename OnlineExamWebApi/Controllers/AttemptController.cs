@@ -61,7 +61,7 @@ namespace OnlineExamWebApi.Controllers
         [Route("EditAttempt")]
         public IActionResult PutAttempt([FromQuery] int attempt_id, [FromQuery] int level, [FromQuery] int marks)
         {
-            var data=
+            
             if (ModelState.IsValid)
             {
                 Attempt oldAttempt = db.Attempts.Find(attempt_id);
