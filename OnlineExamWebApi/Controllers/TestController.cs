@@ -77,8 +77,16 @@ namespace OnlineExamWebApi.Controllers
         [Route("GetToAttempt")]
         public IActionResult GetNotAttempted([FromQuery]int user_id)
         {
-            var data = db.Tests.FromSqlInterpolated<Test>($"gettoattempt @user_id={user_id}");
-            return Ok(data);
+            try
+            {
+                var data = db.Tests.FromSqlInterpolated<Test>($"gettoattempt @user_id={user_id}");
+                return Ok(data);
+
+            }
+            catch (Exception)
+            {
+                return NotFound("No data found");
+            }
         }
 
 

@@ -85,6 +85,79 @@ namespace OnlineExamWebApi.Controllers
             }
             return BadRequest("Unable to edit the record");
         }
+
+
+        
+ 
+        public string updateAttempt( int attempt_id, int level, int marks)
+        {
+
+            if (ModelState.IsValid)
+            {
+                Attempt oldAttempt = db.Attempts.Find(attempt_id);
+                if (level == 1)
+                {
+                    oldAttempt.LevelCleared = 1;
+                    oldAttempt.LOneMarks = marks;
+                }
+                if (level == 2)
+                {
+                    oldAttempt.LevelCleared = 2;
+                    oldAttempt.LTwoMarks = marks;
+                }
+                if (level == 3)
+                {
+                    oldAttempt.LevelCleared = 3;
+                    oldAttempt.LThreeMarks = marks;
+                }
+                db.SaveChanges();
+                return ("Done");
+            }
+            return ("Unable to edit the record");
+        }
+
+
+        //Answer Check
+        [HttpPost]
+        [Route("CheckResult")]
+        public IActionResult CheckResultPost(List<CheckResult> ans, [FromQuery] int level_id, [FromQuery] int test_id, [FromQuery] int attempt_id)
+        {
+            resultresponse rr = new resultresponse();
+            rr.Marks = 0;
+            foreach (var data in ans)
+            {
+                var question = db.Questions.Where(q => q.QuestionId == data.Id).FirstOrDefault();
+                if (question.OptionsCorrect == data.Answer)
+                {
+                    rr.Marks++;
+                }
+
+            }
+            bool ispassed = false;
+            var data1 = db.Tests.Where(t => t.TestId == test_id).FirstOrDefault();
+            if (level_id == 1)
+            {
+                if (data1.LOneReq <= rr.Marks) ispassed = true;
+
+            }
+            if (level_id == 2)
+            {
+                if (data1.LTwoReq <= rr.Marks) ispassed = true;
+
+
+            }
+            if (level_id == 3)
+            {
+                if (data1.LThreeReq <= rr.Marks) ispassed = true;
+
+            }
+
+            updateAttempt(attempt_id: attempt_id, level: level_id, marks: rr.Marks);
+            rr.IsPassed = ispassed;
+            return Ok(rr);
+        }
+
     }
+
 
 }
