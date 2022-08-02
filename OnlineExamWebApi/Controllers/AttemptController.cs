@@ -163,7 +163,7 @@ namespace OnlineExamWebApi.Controllers
 
             }
             
-            updateAttempt(attempt_id: attempt_id, level: level_id, marks: rr.Marks);
+            updateAttempt(attempt_id: attempt_id, level: level_id, marks: rr.Marks,ispass:ispassed);
            
 
             rr.IsPassed = ispassed;
