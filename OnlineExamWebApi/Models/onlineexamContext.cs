@@ -23,6 +23,7 @@ namespace OnlineExamWebApi.Models
         public virtual DbSet<Questionsadvanced> Questionsadvanceds { get; set; }
         public virtual DbSet<Test> Tests { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<AdminAllAnalysis> AdminAllAnalyses { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

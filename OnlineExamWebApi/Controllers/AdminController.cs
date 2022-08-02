@@ -73,5 +73,25 @@ namespace OnlineExamWebApi.Controllers
         }
 
 
+
+
+        // FIND ALL Users who Attempted the test
+
+        [HttpGet]
+        [Route("GetAllAnalysis")]
+        public IActionResult GetAllAnalysis([FromQuery] int admin_id)
+        {
+            try
+            {
+                var data = db.AdminAllAnalyses.FromSqlInterpolated<AdminAllAnalysis>($"getallanalysis @admin_id={admin_id}");
+                
+                return Ok(data);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest( ex.Message);
+            }
+        }
     }
 }

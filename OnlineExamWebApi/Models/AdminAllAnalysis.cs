@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OnlineExamWebApi.Models
 {
-    public class Admin_Analysis
+    public class AdminAllAnalysis
     {
         public int UserId { get; set; }
         public string Phone { get; set; }
@@ -23,7 +23,6 @@ namespace OnlineExamWebApi.Models
         public int AttemptId { get; set; }
         public int TestId { get; set; }
         public int LevelCleared { get; set; }
-        public int Marks { get; set; }
         public int LOneMarks { get; set; }
         public int LTwoMarks { get; set; }
         public int LThreeMarks { get; set; }
